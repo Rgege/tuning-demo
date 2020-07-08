@@ -1,1 +1,8 @@
-
+server:
+  port: 8001
+#时间戳统一转换
+spring:
+  jackson:
+    date-format: "yyyy-MM-dd HH:mm:ss"
+    time-zone: "GMT+8"
+    #default-property-inclusion: non_null #反参忽略NULL值字段
