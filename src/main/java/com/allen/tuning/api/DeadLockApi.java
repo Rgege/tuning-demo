@@ -26,8 +26,8 @@ public class DeadLockApi extends AbstractApi<DeadLockReq, DeadLockRsp> {
 
     @Override
     protected DeadLockRsp procBiz(DeadLockReq param) throws BizException, SystemException {
-        Thread threadA = new Thread(() -> {
-            String name = Thread.currentThread().getName();
+        String name = Thread.currentThread().getName();
+        if (param.getOpt()==null||param.getOpt()==1){
             synchronized (lock1) {
                 LOGGER.info(">>>>>>>>>>>>>>>>>>>>>>>>>>" + name + "success get lock1");
                 try {
@@ -40,9 +40,7 @@ public class DeadLockApi extends AbstractApi<DeadLockReq, DeadLockRsp> {
                     LOGGER.info(">>>>>>>>>>>>>>>>>>>>>>>>>>" + name + "success get lock2");
                 }
             }
-        }, "DeadLock-A");
-        Thread threadB = new Thread(() -> {
-            String name = Thread.currentThread().getName();
+        }else if (param.getOpt()==null||param.getOpt()==2){
             synchronized (lock2) {
                 LOGGER.info(">>>>>>>>>>>>>>>>>>>>>>>>>>" + name + "success get lock2");
                 try {
@@ -55,9 +53,7 @@ public class DeadLockApi extends AbstractApi<DeadLockReq, DeadLockRsp> {
                     LOGGER.info(">>>>>>>>>>>>>>>>>>>>>>>>>>" + name + "success get lock1");
                 }
             }
-        }, "DeadLock-B");
-        threadA.start();
-        threadB.start();
+        }
 
         return new DeadLockRsp();
     }
