@@ -6,11 +6,13 @@ import com.allen.tuning.common.exception.ParamException;
 import com.allen.tuning.common.exception.SystemException;
 import com.allen.tuning.entity.req.param.EndlessLoopReq;
 import com.allen.tuning.entity.rsp.data.EndlessLoopRsp;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author rui.xiong
@@ -18,6 +20,10 @@ import java.net.URLConnection;
  */
 @Api(apiName = "endless.loop.api")
 public class EndlessLoopApi extends AbstractApi<EndlessLoopReq, EndlessLoopRsp> {
+    @Autowired
+    @Qualifier("infiniteLoopThreadPool")
+    private ThreadPoolExecutor executor;
+
 
     @Override
     protected void paramVerify(EndlessLoopReq param) throws ParamException {
@@ -28,9 +34,9 @@ public class EndlessLoopApi extends AbstractApi<EndlessLoopReq, EndlessLoopRsp> 
 
     @Override
     protected EndlessLoopRsp procBiz(EndlessLoopReq param) throws BizException, SystemException {
-        Thread thread = new Thread(() -> {
+        executor.execute(() -> {
             int i = 0;
-            while (true) {
+            for (;;) {
                 i++;
                 if (i == param.getLoopTime()) {
                     break;
@@ -45,10 +51,8 @@ public class EndlessLoopApi extends AbstractApi<EndlessLoopReq, EndlessLoopRsp> 
                 }
             }
         });
-        thread.start();
+
         EndlessLoopRsp rsp = new EndlessLoopRsp();
-        rsp.setThreadId(thread.getId());
-        rsp.setThreadName(thread.getName());
         return rsp;
     }
 
@@ -56,5 +60,5 @@ public class EndlessLoopApi extends AbstractApi<EndlessLoopReq, EndlessLoopRsp> 
     protected Class<EndlessLoopReq> getReqClass() {
         return EndlessLoopReq.class;
     }
-    
+
 }
