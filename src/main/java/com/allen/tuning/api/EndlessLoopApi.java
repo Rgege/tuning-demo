@@ -23,21 +23,14 @@ public class EndlessLoopApi extends AbstractApi<EndlessLoopReq, EndlessLoopRsp> 
 
     @Override
     protected EndlessLoopRsp procBiz(EndlessLoopReq param) throws BizException, SystemException {
-        final String prefix = "loop" + Thread.currentThread().getId() + "_";
         Thread thread = new Thread(() -> {
             int i = 0;
             while (true) {
                 i++;
                 if (i == param.getLoopTime()) {
                     break;
-                } else {
-                    try {
-                        //模拟业务处理
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                 }
+                doSomeBussiness();
             }
         });
         thread.start();
@@ -50,5 +43,14 @@ public class EndlessLoopApi extends AbstractApi<EndlessLoopReq, EndlessLoopRsp> 
     @Override
     protected Class<EndlessLoopReq> getReqClass() {
         return EndlessLoopReq.class;
+    }
+
+    private void doSomeBussiness(){
+        try {
+            //模拟业务处理
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
