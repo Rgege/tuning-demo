@@ -44,7 +44,7 @@ public class ApiResponse implements Serializable {
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setSuccess(true);
         apiResponse.setCode(ApiResponseCode.SUCCESS.getCode());
-        apiResponse.setData(new DemoData());
+        apiResponse.setData(data);
         return apiResponse;
     }
 
