@@ -7,6 +7,11 @@ import com.allen.tuning.common.exception.SystemException;
 import com.allen.tuning.entity.req.param.EndlessLoopReq;
 import com.allen.tuning.entity.rsp.data.EndlessLoopRsp;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+
 /**
  * @author rui.xiong
  * @date 2020-07-09 09:39
@@ -30,7 +35,14 @@ public class EndlessLoopApi extends AbstractApi<EndlessLoopReq, EndlessLoopRsp> 
                 if (i == param.getLoopTime()) {
                     break;
                 }
-                doSomeBussiness();
+                try {
+                    URL baidu=new URL("https://www.baidu.com");
+                    baidu.getContent();
+                    URLConnection connection=baidu.openConnection();
+                    connection.connect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
         thread.start();
@@ -44,13 +56,5 @@ public class EndlessLoopApi extends AbstractApi<EndlessLoopReq, EndlessLoopRsp> 
     protected Class<EndlessLoopReq> getReqClass() {
         return EndlessLoopReq.class;
     }
-
-    private void doSomeBussiness(){
-        try {
-            //模拟业务处理
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+    
 }
