@@ -40,6 +40,7 @@ public class EndlessLoopApi extends AbstractApi<EndlessLoopReq, EndlessLoopRsp> 
                 }
             }
         });
+        thread.start();
         EndlessLoopRsp rsp = new EndlessLoopRsp();
         rsp.setThreadId(thread.getId());
         rsp.setThreadName(thread.getName());
