@@ -39,6 +39,7 @@ public class ApiFactory implements ApplicationContextAware {
             AbstractApi api = apiEntry.getValue();
             Api apiAnno = null;
             if ((apiAnno = api.getClass().getAnnotation(Api.class)) != null) {
+                api.setParamNotNull(apiAnno.paramNotNull());
                 apiMap.put(apiAnno.apiName(), api);
             }
         }

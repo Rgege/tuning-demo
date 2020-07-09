@@ -95,6 +95,16 @@ public class JsonUtils {
         }
         return t;
     }
+    public static <T> T toJavaObj(Object obj, Class<T> beanType) throws JsonException {
+        T t = null;
+        try {
+            t = mapper.convertValue(obj, beanType);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new JsonException(e.getMessage(), e);
+        }
+        return t;
+    }
     /**
      * json to map
      *

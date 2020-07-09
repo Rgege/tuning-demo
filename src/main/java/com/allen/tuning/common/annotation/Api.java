@@ -17,4 +17,9 @@ public @interface Api {
      * api name
      */
     String apiName();
+
+    /**
+     * 业务参数是不是必须
+     */
+    boolean paramNotNull() default false;
 }

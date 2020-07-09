@@ -1,8 +1,10 @@
 package com.allen.tuning.api;
 
 import com.allen.tuning.common.exception.BizException;
+import com.allen.tuning.common.exception.JsonException;
 import com.allen.tuning.common.exception.ParamException;
 import com.allen.tuning.common.exception.SystemException;
+import com.allen.tuning.common.util.JsonUtils;
 import com.allen.tuning.constant.ApiResponseCode;
 import com.allen.tuning.entity.rsp.AbstractData;
 import com.allen.tuning.entity.rsp.ApiResponse;
@@ -14,14 +16,17 @@ import com.allen.tuning.entity.rsp.ApiResponse;
 public abstract class AbstractApi<REQ, RSP extends AbstractData> {
 
     /**
-     *
      * @param paramObj
      * @return
      */
     public ApiResponse apiExct(Object paramObj) {
+        if (isParamNotNull() && paramObj==null){
+            return ApiResponse.failedMessageResponse("param can not be null");
+        }
+
         ApiResponse response;
-        REQ param = getParam(paramObj);
         try {
+            REQ param = getParam(paramObj);
             paramVerify(param);
             response = ApiResponse.commonSuccessResponse(procBiz(param));
         } catch (ParamException e) {
@@ -34,6 +39,9 @@ public abstract class AbstractApi<REQ, RSP extends AbstractData> {
         } catch (SystemException e) {
             e.printStackTrace();
             response = ApiResponse.failedResponse(ApiResponseCode.SYSTEM_ERROR);
+        } catch (JsonException e) {
+            e.printStackTrace();
+            response = ApiResponse.failedMessageResponse("param serialize error");
         }
 
 
@@ -58,7 +66,20 @@ public abstract class AbstractApi<REQ, RSP extends AbstractData> {
      */
     protected abstract RSP procBiz(REQ param) throws BizException, SystemException;
 
-    private REQ getParam(Object paramObj) {
-        return (REQ) paramObj;
+    protected abstract Class<REQ> getReqClass();
+
+    private REQ getParam(Object paramObj) throws JsonException {
+
+        return JsonUtils.toJavaObj(paramObj,getReqClass());
+    }
+
+    private boolean paramNotNull;
+
+    public boolean isParamNotNull() {
+        return paramNotNull;
+    }
+
+    public void setParamNotNull(boolean paramNotNull) {
+        this.paramNotNull = paramNotNull;
     }
 }
