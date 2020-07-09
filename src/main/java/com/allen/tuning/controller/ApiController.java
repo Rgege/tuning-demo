@@ -6,7 +6,6 @@ import com.allen.tuning.common.annotation.RequestResolver;
 import com.allen.tuning.constant.ApiResponseCode;
 import com.allen.tuning.entity.req.ApiRequest;
 import com.allen.tuning.entity.rsp.ApiResponse;
-import com.allen.tuning.entity.rsp.DemoData;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +33,6 @@ public class ApiController {
         if (null==api){
             return ApiResponse.failedResponse(ApiResponseCode.API_UNDEFINED);
         }
-        return ApiResponse.commonSuccessResponse(new DemoData());
+        return api.apiExct(param.getParam());
     }
 }
