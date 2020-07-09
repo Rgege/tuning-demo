@@ -14,7 +14,7 @@ import com.allen.tuning.entity.rsp.ApiResponse;
 public abstract class AbstractApi<REQ, RSP extends AbstractData> {
 
     /**
-     * 
+     *
      * @param paramObj
      * @return
      */
